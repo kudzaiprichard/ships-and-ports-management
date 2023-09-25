@@ -14,8 +14,8 @@ public class Utils {
     //User menu
     public static int mainMenu(){
         Scanner sc = new Scanner(System.in);
-        System.out.println("\n######################################################################################");
-        System.out.println("*********************** Welcome to portAShip.Port Management System ********************");
+        System.out.println("\n########################################################################################");
+        System.out.println("*********************** Welcome to Ships And Port Management System ********************");
         System.out.println("########################################################################################\n");
         System.out.println("""
                 Choose an option
@@ -53,7 +53,7 @@ public class Utils {
                 }
                 //If not "L" or "R" its invalid input
                 else {
-                    System.out.println("[ERR]: Invalid container type");
+                    System.out.println("[ERR]-> Invalid container type");
                     return null;
                 }
             }
@@ -83,7 +83,7 @@ public class Utils {
                     maxNumberOfLiquidContainers,fuelConsumptionPerKM, tankCapacity);
         }
 
-        System.out.println("[ERR]:Invalid inputs, could not create ship");
+        System.out.println("[ERR]-> Invalid inputs, could not create ship");
         return null;
     }
 
@@ -170,12 +170,12 @@ public class Utils {
             }
 
             else{
-                System.out.println("[ERR]: ship is full");
+                System.out.println("[ERR]-> ship is full");
             }
 
         }
         else {
-            System.out.println("[ERR] : Could not find container or ship on port");
+            System.out.println("[ERR]-> Could not find container or ship on port");
         }
 
     }
@@ -191,7 +191,7 @@ public class Utils {
                 return;
             }
         }
-        System.out.println("[ERR]: container.Container does not exits");
+        System.out.println("[ERR]-> container.Container does not exits");
     }
 
     //Method to sail ship to port
@@ -224,7 +224,7 @@ public class Utils {
             return;
         }
 
-        System.out.println("[ERR]: Invalid input");
+        System.out.println("[ERR]-> Invalid input");
     }
 
 
