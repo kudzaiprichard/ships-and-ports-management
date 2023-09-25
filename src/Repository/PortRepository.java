@@ -20,6 +20,13 @@ public class PortRepository {
         return null;
     }
 
+    public Port findPortByLatitudeAndLongitude(double latitude, double longitude){
+        for(Port port: portList){
+            if(port.getLatitude() == latitude && port.getLongitude() == longitude) return port;
+        }
+        return null;
+    }
+
     public boolean removePortById(int id){
         return portList.removeIf(port -> port.getPortID() == id);
     }

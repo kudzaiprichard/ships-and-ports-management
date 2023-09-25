@@ -88,9 +88,8 @@ public class Utils {
     }
 
     //Method for creating a port
-    public static Port createAPort(Double latitude, Double longitude){
-        Random random = new Random();//simulating a random id
-        return new Port(random.nextInt(),latitude,longitude);
+    public static Port createAPort(int ID,Double latitude, Double longitude){
+        return new Port(ID,latitude,longitude);
     }
 
     //check if ship exists on port
@@ -151,7 +150,7 @@ public class Utils {
         //Can only Load a container if a container and ship exits on the same port
         if(checkIfContainerExist(container, port) && checkIfShipExist(ship, port) ){
             //Give appropriate response
-            System.out.println("container.Container and portAShip.Ship exists on the same port");
+            System.out.println("Container and Ship exists on the same port");
 
             //Load container to ship
             // Calculate ship Restrictions

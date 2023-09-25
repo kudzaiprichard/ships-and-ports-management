@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Ship implements IShip {
     int portID ;
     double fuel;
-    Port currentPort;
+    private Port currentPort;
 
     private int ID;
     private Port p;
@@ -27,6 +27,7 @@ public class Ship implements IShip {
                 double fuelConsumptionPerKM, double tankCapacity) {
         this.ID = ID;
         this.p = p;
+        this.currentPort = p;
         this.totalWeightCapacity = totalWeightCapacity;
         this.maxNumberOfAllContainers = maxNumberOfAllContainers;
         this.maxNumberOfHeavyContainers = maxNumberOfHeavyContainers;
