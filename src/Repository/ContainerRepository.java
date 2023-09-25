@@ -22,4 +22,8 @@ public class ContainerRepository {
     public boolean deleteContainerById(int id){
         return containerList.removeIf(container -> id == container.getID());
     }
+
+    public List<Container> findAll() {
+        return this.containerList;
+    }
 }

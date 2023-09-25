@@ -22,4 +22,8 @@ public class ShipRepository {
     public boolean removeShipById(int id){
         return shipList.removeIf(ship -> ship.getID() == id);
     }
+
+    public List<Ship> findAll() {
+        return shipList;
+    }
 }

@@ -33,7 +33,7 @@ public class Main {
                         int weight = sc.nextInt();
 
                         if(weight >= 5000){
-                            System.out.println("Enter type of heavy container: ");
+                            System.out.println("Enter type of heavy container [L] for Liquid  [R] for Refrigerated: ");
                             type = Optional.ofNullable(sc.next());
                         }
 
@@ -168,7 +168,7 @@ public class Main {
                             return;
                         }
 
-                        unloadAContainer(container, ship, port);
+                        loadAContainer(container, ship, port);
 
                         //Should be able to assign container to ship or port on creation
                         //Should also remove container from ship or port on unloading or loading
@@ -209,7 +209,7 @@ public class Main {
                             return;
                         }
 
-                        loadAContainer(container, ship, port);
+                        unloadAContainer(container, ship, port);
 
                         //Should be able to assign container to ship or port on creation
                         //Should also remove container from ship or port on unloading or loading

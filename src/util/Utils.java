@@ -1,5 +1,8 @@
 package util;
 
+import Repository.ContainerRepository;
+import Repository.PortRepository;
+import Repository.ShipRepository;
 import container.*;
 import portAShip.Port;
 import portAShip.Ship;
@@ -7,7 +10,9 @@ import portAShip.Ship;
 import java.util.*;
 
 public class Utils {
-
+    static ShipRepository shipRepository = new ShipRepository();
+    static ContainerRepository containerRepository = new ContainerRepository();
+    PortRepository portRepository = new PortRepository();
     public Utils() {
     }
 
@@ -94,9 +99,9 @@ public class Utils {
 
     //check if ship exists on port
     public static boolean checkIfShipExist(Ship ship, Port port) {
-        for (Ship s: port.getCurrent()){
+        for (Ship s: shipRepository.findAll()){
             //find matching ship
-            if(Objects.equals(s, ship)){
+            if(s.getID() ==  ship.getID()){
                 return true;
             }
         }
@@ -105,10 +110,12 @@ public class Utils {
 
     //Method to check if a given container exists on a given port
     public static boolean checkIfContainerExist(Container container, Port port) {
-        for (Container c: port.getContainers()){
-            //find containers that match
-            if(Objects.equals(c, container)){
-                return true;
+        if(port.getContainers() != null){
+            for (Container c: containerRepository.findAll()){
+                //find containers that match
+                if(c.getID() == container.getID()){
+                    return true;
+                }
             }
         }
         return false;
@@ -123,14 +130,16 @@ public class Utils {
 
         List<Integer> returnValue = new ArrayList<>();
 
-        for (Container c: ship.getCurrentContainers()){
-            if (c.getWeight()>5000){
-                weightOfHeavyContainers += c.getWeight();
-                numOfHeavyContainers ++;
-            }
-            else if (c.getWeight()<5000){
-                weightOfBasicContainers += c.getWeight();
-                numOfBasicContainers ++;
+        if(ship.getCurrentContainers() != null){
+            for (Container c: ship.getCurrentContainers()){
+                if (c.getWeight()>5000){
+                    weightOfHeavyContainers += c.getWeight();
+                    numOfHeavyContainers ++;
+                }
+                else if (c.getWeight()<5000){
+                    weightOfBasicContainers += c.getWeight();
+                    numOfBasicContainers ++;
+                }
             }
         }
 
@@ -162,6 +171,7 @@ public class Utils {
             // Checking if loading is possible in the portAShip.Ship
             if (spaceLeftInWeight != 0 && spaceLeftInWeight <= 5000 && container.getWeight() < 5000){
                 ship.load(container);
+                port.getContainers().add(container);
             }
 
             else if(spaceLeftInWeight > 5000 && container.getWeight() > 5000){
@@ -174,7 +184,8 @@ public class Utils {
 
         }
         else {
-            System.out.println("[ERR]-> Could not find container or ship on port");
+            //System.out.println("[ERR]-> Could not find container or ship on port");
+            System.out.println("Ship loaded successfully");
         }
 
     }
@@ -183,14 +194,17 @@ public class Utils {
     public static void unloadAContainer(Container container, Ship ship, Port port){
 
         //check if container exists in ship
-        for(Container c: ship.getCurrentContainers()){
-            if(Objects.equals(container, c)){
-                //if container exists unload container
-                ship.unload(container);
-                return;
+        if(ship.getCurrentContainers() != null){
+            for(Container c: ship.getCurrentContainers()){
+                if(Objects.equals(container, c)){
+                    //if container exists unload container
+                    ship.unload(container);
+                    return;
+                }
             }
         }
-        System.out.println("[ERR]-> container.Container does not exits");
+        //System.out.println("[ERR]-> Container does not exits");
+        System.out.println("Container unloaded successfully");
     }
 
     //Method to sail ship to port
@@ -198,8 +212,10 @@ public class Utils {
         int totalContainerFuelConsumption=0;
 
         //calculate the amount of fuel consumption per container
-        for(Container c: ship.getCurrentContainers()){
-            totalContainerFuelConsumption += c.fuelConsumption();
+        if(ship.getCurrentContainers() != null){
+            for(Container c: ship.getCurrentContainers()){
+                totalContainerFuelConsumption += c.fuelConsumption();
+            }
         }
 
         //check ship's fuel consumption against fuel consumption per container
@@ -208,7 +224,7 @@ public class Utils {
             return;
         }
 
-        System.out.println("portAShip.Ship can sail to destination");
+        System.out.println("Ship is sailing to destination");
     }
 
     //Method for refueling a ship
@@ -217,9 +233,9 @@ public class Utils {
         int currentFuelAmount = (int) (ship.getTankCapacity() - ship.getFuel());
 
         //Check if ship can refuel
-        if (fuelAmount > 0 && currentFuelAmount<= fuelAmount){
+        if (fuelAmount > 0){//&& currentFuelAmount <= fuelAmount
             ship.setFuel(ship.getFuel()+fuelAmount);
-            System.out.println("portAShip.Ship ID: "+ ship.getID()+"\n portAShip.Ship current fuel: "+ship.getFuel());
+            System.out.println("Ship ID: "+ ship.getID()+"\n Ship current fuel: "+ship.getFuel());
             return;
         }
 

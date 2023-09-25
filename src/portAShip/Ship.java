@@ -54,12 +54,12 @@ public class Ship implements IShip {
 
     @Override
     public boolean load(Container cont) {
-        return false;
+        return getCurrentContainers().add(cont);
     }
 
     @Override
     public boolean unload(Container cont) {
-        return false;
+        return getCurrentContainers().remove(cont);
     }
 
     public int getPortID() {
