@@ -13,8 +13,11 @@ public class ShipRepository {
     }
 
     public Ship findShipById(int id){
-        for(Ship ship: shipList){
-            if(ship.getID() == id) return ship;
+        if(!shipList.isEmpty()){
+            for(Ship ship: shipList){
+                if(ship.getID() == id) return ship;
+            }
+            return null;
         }
         return null;
     }

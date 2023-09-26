@@ -33,7 +33,7 @@ public class Main {
                         int weight = sc.nextInt();
 
                         if(weight >= 5000){
-                            System.out.println("Enter type of heavy container [L] for Liquid  [R] for Refrigerated: ");
+                            System.out.println("Enter type of heavy container\n[L] for Liquid  [R] for Refrigerated [N] is not specified: ");
                             type = Optional.ofNullable(sc.next());
                         }
 
@@ -47,10 +47,7 @@ public class Main {
                         containerRepository.addContainer(container);
 
                         if(container != null)
-                            System.out.println("Container (id: " + container.getID()+ " weight: "
-                                    + container.getWeight()
-                                    + ") was created successfully"
-                            );
+                            System.out.println( container.toString());
                         else System.out.println("[ERR]-> Failed to create container");
                     }
 
@@ -85,6 +82,14 @@ public class Main {
                         System.out.println("Enter ship tank capacity: ");
                         double tankCapacity = sc.nextDouble();
 
+                        System.out.println("Enter amount of fuel in tank: ");
+                        double fuelInTank = sc.nextInt();
+
+                        if(tankCapacity < fuelInTank){
+                            System.out.println("[ERR]-> cannot enter fuel amount greater than tank capacity");
+                            fuelInTank = 0;
+                        }
+
                         if(shipRepository.findShipById(ID) != null){
                             System.out.println("[ERR]-> Ship ID already exists");
                             return;
@@ -97,15 +102,14 @@ public class Main {
                             return;
                         }
 
-                        Ship ship = createAShip(ID,port,totalWeightCapacity,maxNumberOfAllContainers,
-                                    maxNumberOfHeavyContainers,maxNumberOfRefrigeratedContainers,
-                                    maxNumberOfLiquidContainers,fuelConsumptionPerKM,tankCapacity);
+                        Ship ship = createAShip(
+                                ID,port,totalWeightCapacity,maxNumberOfAllContainers,maxNumberOfHeavyContainers,
+                                maxNumberOfRefrigeratedContainers,maxNumberOfLiquidContainers,
+                                fuelConsumptionPerKM,tankCapacity,fuelInTank
+                        );
 
                         if(ship != null){
-                            System.out.println("Ship (ship id: " + ship.getID()+", Port latitude: "
-                                    + ship.getCurrentPort().getLatitude()
-                                    + " and Port longitude : "+ ship.getCurrentPort().getLongitude()
-                                    +") was created successfully");
+                            System.out.println(ship.toString());
                             shipRepository.addShip(ship);
                         }
                     }
@@ -130,90 +134,113 @@ public class Main {
 
                         ID = generateID(portRepository, ID);
                         Port port = createAPort(ID,longitude,latitude);
+
+                        System.out.println("How many container do you want to add on this port: ");
+                        int containers = sc.nextInt();
+
+                        for(int i = 1; i <= containers; i++){
+                            System.out.println("Enter container " + i + " id: ");
+                            int containerId = sc.nextInt();
+                            var container = containerRepository.findContainerById(containerId);
+
+                            if(container == null){
+                                System.out.println("[ERR]-> container does not exist");
+                            }else{
+                                port.getOnPortContainerList().add(container);
+                            }
+                        }
+
                         portRepository.addPort(port);
 
-                        System.out.println("Port (ID: " + port.getPortID() +", latitude: " + port.getLatitude() +
-                                " and longitude: " + port.getLongitude() + ") was created successfully");
+                        System.out.println(port.toString());
                     }
 
                     //Load container to ship menu option
                     case 4 ->{
                         System.out.println("::::::::::::::::::LOAD CONTAINER::::::::::::::::::");
 
+                        //ship is created on a certain port
+                        //you can only load container on that port
                         System.out.println("Enter ship id: ");
                         int shipId = sc.nextInt();
 
-                        System.out.println("Enter port id: ");
-                        int portId = sc.nextInt();
-
-                        System.out.println("Enter container id: ");
-                        int containerId = sc.nextInt();
-
-                        var container = containerRepository.findContainerById(containerId);
-                        var ship = shipRepository.findShipById(shipId);
-                        var port = portRepository.findPortById(portId);
-
-                        //Check if specified container, port and ship exists
-                        if(container == null){
-                            System.out.println("[ERR]-> Container does not exist");
-                        }
+                        Ship ship = shipRepository.findShipById(shipId);
+                        var port = portRepository.findPortById(ship.getCurrentPort().getPortID());
 
                         if (ship == null){
                             System.out.println("[ERR]-> Ship does not exist");
                             return;
                         }
 
-                        if(port == null){
-                            System.out.println("[ERR]-> Port does not exist");
-                            return;
+                        System.out.println("Ship is on port: " + ship.getCurrentPort().getPortID());
+
+                        if(!ship.getCurrentPort().getOnPortContainerList().isEmpty()){
+                            System.out.println("These are the containers on this port: " + ship.getCurrentPort().getOnPortContainerList());
+                            System.out.println("You can load container by choosing container id\n");
+
+                            System.out.println("How many container do you want to load: ");
+                            System.out.println(
+                                    "NB: Space left on ship can only load: "
+                                            + (ship.getMaxNumberOfAllContainers() - ship.getCurrentContainers().size()) + " containers"
+                            );
+
+                            int noOfContainers = sc.nextInt();
+
+                            for (int i = 1; i <= noOfContainers; i++){
+                                System.out.println("Enter container no" + i + " id: ");
+                                int containerId = sc.nextInt();
+                                var container = containerRepository.findContainerById(containerId);
+
+                                //Check if specified containerexists
+                                if(container == null){
+                                    System.out.println("[ERR]-> Failed to load container, container does not exist");
+                                }else {
+                                    loadAContainer(container, ship, port);
+                                }
+
+                            }
+                        }else{
+                            System.out.println("No containers are available for loading in ship");
                         }
-
-                        loadAContainer(container, ship, port);
-
-                        //Should be able to assign container to ship or port on creation
-                        //Should also remove container from ship or port on unloading or loading
-                        //containerRepository.deleteContainerById(containerId);
-
-
                     }
 
                     //Unload container from ship menu option
                     case 5 ->{
                         System.out.println("::::::::::::::::::UNLOAD CONTAINER::::::::::::::::::");
 
+                        //ship is created on a certain port
+                        //you can only load container on that port
                         System.out.println("Enter ship id: ");
                         int shipId = sc.nextInt();
 
-                        System.out.println("Enter port id: ");
-                        int portId = sc.nextInt();
-
-                        System.out.println("Enter container id: ");
-                        int containerId = sc.nextInt();
-
-                        var container = containerRepository.findContainerById(containerId);
-                        var ship = shipRepository.findShipById(shipId);
-                        var port = portRepository.findPortById(portId);
-
-                        //Check if specified container, port and ship exists
-                        if(container == null){
-                            System.out.println("[ERR]-> Container does not exist");
-                        }
+                        Ship ship = shipRepository.findShipById(shipId);
+                        var port = portRepository.findPortById(ship.getCurrentPort().getPortID());
 
                         if (ship == null){
                             System.out.println("[ERR]-> Ship does not exist");
                             return;
                         }
 
-                        if(port == null){
-                            System.out.println("[ERR]-> Port does not exist");
-                            return;
+                        System.out.println("Ship is on port: " + ship.getCurrentPort().getPortID());
+
+                        if(!ship.getOnShipContainerList().isEmpty()){
+                            System.out.println("These are the containers on this ship: " + ship.getOnShipContainerList());
+                            System.out.println("You can unload container by choosing container id\n");
+
+                            System.out.println("Specify container id to be unloaded: ");
+                            int containerId = sc.nextInt();
+                            var container = containerRepository.findContainerById(containerId);
+
+                            //Check if specified containerexists
+                            if(container == null){
+                                System.out.println("[ERR]-> Failed to unload container, container does not exist");
+                            }else {
+                                unloadAContainer(container, ship, port);
+                            }
+                        }else{
+                            System.out.println("No containers are available for offloading in ship");
                         }
 
-                        unloadAContainer(container, ship, port);
-
-                        //Should be able to assign container to ship or port on creation
-                        //Should also remove container from ship or port on unloading or loading
-                        //containerRepository.deleteContainerById(containerId);
                     }
 
                     //Sail ship to another port menu option

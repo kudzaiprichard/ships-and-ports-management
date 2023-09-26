@@ -3,31 +3,31 @@ package portAShip;
 import container.Container;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Ship implements IShip {
-    int portID ;
-    double fuel;
-    private Port currentPort;
 
     private int ID;
-    private Port p;
+    private Port currentPort;
     private int totalWeightCapacity;
     private int maxNumberOfAllContainers;
     private int maxNumberOfHeavyContainers;
     private int maxNumberOfRefrigeratedContainers;
     private int maxNumberOfLiquidContainers;
     private double fuelConsumptionPerKM;
-
     private double tankCapacity;
+    private double fuelInTank;
 
-    public Ship(int ID, Port p,
-                int totalWeightCapacity, int maxNumberOfAllContainers,
+    private List<Container> onShipContainerList = new ArrayList<>();
+
+
+    public Ship(int ID, Port currentPort, int totalWeightCapacity, int maxNumberOfAllContainers,
                 int maxNumberOfHeavyContainers, int maxNumberOfRefrigeratedContainers,
-                int maxNumberOfLiquidContainers,
-                double fuelConsumptionPerKM, double tankCapacity) {
+                int maxNumberOfLiquidContainers, double fuelConsumptionPerKM, double tankCapacity,
+                double fuelInTank
+    ) {
         this.ID = ID;
-        this.p = p;
-        this.currentPort = p;
+        this.currentPort = currentPort;
         this.totalWeightCapacity = totalWeightCapacity;
         this.maxNumberOfAllContainers = maxNumberOfAllContainers;
         this.maxNumberOfHeavyContainers = maxNumberOfHeavyContainers;
@@ -35,11 +35,13 @@ public class Ship implements IShip {
         this.maxNumberOfLiquidContainers = maxNumberOfLiquidContainers;
         this.fuelConsumptionPerKM = fuelConsumptionPerKM;
         this.tankCapacity = tankCapacity;
+        this.fuelInTank = fuelInTank;
     }
 
+
     @Override
-    public ArrayList<Container> getCurrentContainers() {
-        return null;
+    public List<Container> getCurrentContainers() {
+        return this.onShipContainerList;
     }
 
     @Override
@@ -49,41 +51,17 @@ public class Ship implements IShip {
 
     @Override
     public void reFuel(double newFuel) {
-
+        setFuelInTank(newFuel);
     }
 
     @Override
     public boolean load(Container cont) {
-        return getCurrentContainers().add(cont);
+        return getOnShipContainerList().add(cont);
     }
 
     @Override
     public boolean unload(Container cont) {
-        return getCurrentContainers().remove(cont);
-    }
-
-    public int getPortID() {
-        return portID;
-    }
-
-    public void setPortID(int portID) {
-        this.portID = portID;
-    }
-
-    public double getFuel() {
-        return fuel;
-    }
-
-    public void setFuel(double fuel) {
-        this.fuel = fuel;
-    }
-
-    public Port getCurrentPort() {
-        return currentPort;
-    }
-
-    public void setCurrentPort(Port currentPort) {
-        this.currentPort = currentPort;
+        return getOnShipContainerList().remove(cont);
     }
 
     public int getID() {
@@ -94,24 +72,16 @@ public class Ship implements IShip {
         this.ID = ID;
     }
 
-    public Port getP() {
-        return p;
+    public Port getCurrentPort() {
+        return currentPort;
     }
 
-    public void setP(Port p) {
-        this.p = p;
+    public void setCurrentPort(Port currentPort) {
+        this.currentPort = currentPort;
     }
 
     public int getTotalWeightCapacity() {
         return totalWeightCapacity;
-    }
-
-    public double getTankCapacity() {
-        return tankCapacity;
-    }
-
-    public void setTankCapacity(double tankCapacity) {
-        this.tankCapacity = tankCapacity;
     }
 
     public void setTotalWeightCapacity(int totalWeightCapacity) {
@@ -156,5 +126,46 @@ public class Ship implements IShip {
 
     public void setFuelConsumptionPerKM(double fuelConsumptionPerKM) {
         this.fuelConsumptionPerKM = fuelConsumptionPerKM;
+    }
+
+    public double getTankCapacity() {
+        return tankCapacity;
+    }
+
+    public void setTankCapacity(double tankCapacity) {
+        this.tankCapacity = tankCapacity;
+    }
+
+    public List<Container> getOnShipContainerList() {
+        return onShipContainerList;
+    }
+
+    public void setOnShipContainerList(List<Container> onShipContainerList) {
+        this.onShipContainerList = onShipContainerList;
+    }
+
+    public double getFuelInTank() {
+        return fuelInTank;
+    }
+
+    public void setFuelInTank(double fuelInTank) {
+        this.fuelInTank = fuelInTank;
+    }
+
+    @Override
+    public String toString() {
+        return "Ship created successfully: { " +
+                "\nID: " + ID +
+                "\ncurrentPort: " + currentPort.getPortID() +
+                "\ntotalWeightCapacity: " + totalWeightCapacity +
+                "\nmaxNumberOfAllContainers: " + maxNumberOfAllContainers +
+                "\nmaxNumberOfHeavyContainers: " + maxNumberOfHeavyContainers +
+                "\nmaxNumberOfRefrigeratedContainers: " + maxNumberOfRefrigeratedContainers +
+                "\nmaxNumberOfLiquidContainers: " + maxNumberOfLiquidContainers +
+                "\nfuelConsumptionPerKM: " + fuelConsumptionPerKM +
+                "\ntankCapacity: " + tankCapacity +
+                "\nfuelInTank: " + fuelInTank + "\n" +
+                "\nContainers in ship: " + onShipContainerList +
+                "\n} ";
     }
 }

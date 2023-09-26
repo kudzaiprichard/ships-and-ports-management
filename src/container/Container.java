@@ -3,10 +3,31 @@ package container;
 public class Container {
     private int ID;
     private int weight;
+    private Boolean isOnShip;
+    private Boolean isOnPort;
 
-    public Container(int ID, int weight){
+    public Container(int ID, int weight, Boolean isOnShip, Boolean isOnPort) {
         this.ID = ID;
         this.weight = weight;
+        this.isOnShip = isOnShip;
+        this.isOnPort = isOnPort;
+    }
+    public Container() {}
+
+    public Boolean getOnShip() {
+        return isOnShip;
+    }
+
+    public void setOnShip(Boolean onShip) {
+        isOnShip = onShip;
+    }
+
+    public Boolean getOnPort() {
+        return isOnPort;
+    }
+
+    public void setOnPort(Boolean onPort) {
+        isOnPort = onPort;
     }
 
     public double consumption(){
@@ -42,7 +63,11 @@ public class Container {
 
     @Override
     public String toString() {
-        return "Container{}";
+        return "Container has been created successfully: { " +
+                "\nID: " + ID +
+                "\nweight: " + weight +
+                "\nisOnShip: " + isOnShip +
+                "\nisOnPort: " + isOnPort;
     }
 }
 
