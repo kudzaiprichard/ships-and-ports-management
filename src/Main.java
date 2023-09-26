@@ -272,13 +272,17 @@ public class Main {
                     case 7 ->{
                         System.out.println("::::::::::::::::::REFUEL SHIP::::::::::::::::::");
 
-                        System.out.println("Enter fuel amount: ");
-                        double fuelAmount = sc.nextDouble();
-
                         System.out.println("Enter ship id: ");
                         int shipId = sc.nextInt();
 
                         var ship = shipRepository.findShipById(shipId);
+                        System.out.println(
+                                "Current ship fuel:" + ship.getFuelInTank() +
+                                        "\nShip tank capacity: " + ship.getTankCapacity()
+                        );
+
+                        System.out.println("\nEnter fuel amount: ");
+                        double fuelAmount = sc.nextDouble();
 
                         //Check if ship exists
                         if (ship == null){

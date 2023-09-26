@@ -260,17 +260,22 @@ public class Utils {
 
     //Method for refueling a ship
     public static void refuel(Ship ship, double fuelAmount){
-        //Calculate the current fuel amount
-        int currentFuelAmount = (int) (ship.getTankCapacity() - ship.getFuelInTank());
 
-        //Check if ship can refuel
-        if (fuelAmount > 0){//&& currentFuelAmount <= fuelAmount
-            ship.setFuelInTank(ship.getFuelInTank()+fuelAmount);
-            System.out.println("Ship ID: "+ ship.getID()+"\n Ship current fuel: "+ship.getFuelInTank());
-            return;
+        if(ship.getTankCapacity() < fuelAmount){
+            System.out.println("[ERR]-> cannot enter fuel amount greater than fuel tank capacity");
         }
-
-        System.out.println("[ERR]-> Invalid input");
+        else {
+            //Check if ship can refuel
+            if (fuelAmount > 0){//&& currentFuelAmount <= fuelAmount
+                //Calculate the current fuel amount
+                double currentFuelAmount = (ship.getTankCapacity() - ship.getFuelInTank());
+                ship.setFuelInTank(ship.getFuelInTank()+fuelAmount);
+                System.out.println("Ship ID: "+ ship.getID()+"\nShip refueled to: "+ship.getFuelInTank());
+            }
+            else {
+                System.out.println("[ERR]-> cannot enter fuel amount less than or equal to zero");
+            }
+        }
     }
 
 
