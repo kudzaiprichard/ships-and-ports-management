@@ -63,7 +63,7 @@ public class Container {
 
     @Override
     public String toString() {
-        return "Container has been created successfully: { " +
+        return "{ " +
                 "\nID: " + ID +
                 "\nweight: " + weight +
                 "\nisOnShip: " + isOnShip +

@@ -81,7 +81,7 @@ public class Port implements IPort{
 
     @Override
     public String toString() {
-        return "Port created successfully : { " +
+        return "{ " +
                 "\nportID: " + portID +
                 "\nlatitude: " + latitude +
                 "\nlongitude: " + longitude + "\n" +

@@ -238,24 +238,62 @@ public class Utils {
 
     }
 
+    //Calculate distance
+    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2, String unit) {
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        }
+        else {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            if (unit.equals("K")) {
+                dist = dist * 1.609344;
+            } else if (unit.equals("N")) {
+                dist = dist * 0.8684;
+            }
+            return (dist);
+        }
+    }
+
     //Method to sail ship to port
     public static void sailShipToPort(Ship ship, Port port){
-        int totalContainerFuelConsumption=0;
 
-        //calculate the amount of fuel consumption per container
-        if(ship.getCurrentContainers() != null){
-            for(Container c: ship.getCurrentContainers()){
-                totalContainerFuelConsumption += c.fuelConsumption();
+        double distance = calculateDistance(
+                ship.getCurrentPort().getLatitude(),
+                ship.getCurrentPort().getLongitude(),
+                port.getLatitude(),
+                port.getLongitude(),
+                "K"
+        );
+
+        if(distance == 0){
+            System.out.println("[ERR]-> Ship Can not navigate to the same destination");
+        }else{
+            int totalContainerFuelConsumption = 0;
+            double tankCapacity = ship.getTankCapacity();
+            double fuelInTank = ship.getFuelInTank();
+            double fuelConsuptionPerKM = ship.getFuelConsumptionPerKM();
+
+            if(tankCapacity < (fuelConsuptionPerKM * distance)){
+                System.out.println("[ERR]-> Cannot sail ship, tank capacity too small for sail");
+                System.out.println("Distance to sail port destination is: " + distance);
+                System.out.println("Amount of fuel needed to make this sail: " + (fuelConsuptionPerKM * distance));
             }
+            else if(fuelInTank < (fuelConsuptionPerKM * distance)){
+                System.out.println("[ERR]-> Cannot sail ship, current fuel too small for sail");
+                System.out.println("Distance to sail port destination is: " + distance);
+                System.out.println("Amount of fuel needed to make this sail: " + (fuelConsuptionPerKM * distance));
+            }
+            else{
+                System.out.println("Distance to sail port destination is: " + distance);
+                System.out.println("Ship is sailing to destination");
+            }
+
         }
 
-        //check ship's fuel consumption against fuel consumption per container
-        if (totalContainerFuelConsumption > ship.getFuelConsumptionPerKM()){
-            System.out.println("portAShip.Ship cannot sail");
-            return;
-        }
-
-        System.out.println("Ship is sailing to destination");
     }
 
     //Method for refueling a ship

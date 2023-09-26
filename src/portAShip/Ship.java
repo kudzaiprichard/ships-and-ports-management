@@ -154,7 +154,7 @@ public class Ship implements IShip {
 
     @Override
     public String toString() {
-        return "Ship created successfully: { " +
+        return "{ " +
                 "\nID: " + ID +
                 "\ncurrentPort: " + currentPort.getPortID() +
                 "\ntotalWeightCapacity: " + totalWeightCapacity +

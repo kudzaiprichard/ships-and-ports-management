@@ -30,4 +30,8 @@ public class PortRepository {
     public boolean removePortById(int id){
         return portList.removeIf(port -> port.getPortID() == id);
     }
+
+    public List<Port> findAllPorts() {
+        return this.portList;
+    }
 }

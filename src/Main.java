@@ -46,8 +46,10 @@ public class Main {
                         var container = createAContainer(ID, weight, type);
                         containerRepository.addContainer(container);
 
-                        if(container != null)
+                        if(container != null){
+                            System.out.println("Container created successfully");
                             System.out.println( container.toString());
+                        }
                         else System.out.println("[ERR]-> Failed to create container");
                     }
 
@@ -109,6 +111,7 @@ public class Main {
                         );
 
                         if(ship != null){
+                            System.out.println("Ship created successfully");
                             System.out.println(ship.toString());
                             shipRepository.addShip(ship);
                         }
@@ -151,7 +154,7 @@ public class Main {
                         }
 
                         portRepository.addPort(port);
-
+                        System.out.println("Port created successfully");
                         System.out.println(port.toString());
                     }
 
@@ -250,21 +253,31 @@ public class Main {
                         System.out.println("Enter ship id: ");
                         int shipId = sc.nextInt();
 
-                        System.out.println("Enter port id: ");
-                        int portId = sc.nextInt();
-
                         var ship = shipRepository.findShipById(shipId);
-                        var port = portRepository.findPortById(portId);
-
                         if (ship == null){
                             System.out.println("[ERR]-> Ship does not exist");
                             return;
                         }
 
+                        List<Port> canSailToList = new ArrayList<>();
+
+                        for (Port port:portRepository.findAllPorts() ){
+                            if(port.getPortID() != ship.getCurrentPort().getPortID()){
+                                canSailToList.add(port);
+                            }
+                        }
+
+                        System.out.println("Here is ports available for ship to sail: " + canSailToList);
+                        System.out.println("Enter destination port id: ");
+                        System.out.println("NB: make sure to enter port Id: ");
+                        int portId = sc.nextInt();
+
+                        var port = portRepository.findPortById(portId);
                         if(port == null){
-                            System.out.println("[ERR]-> Port does not exist");
+                            System.out.println("[ERR]-> destination port does not exist");
                             return;
                         }
+
                         sailShipToPort(ship, port);
                     }
 
